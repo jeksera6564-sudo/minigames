@@ -3,158 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nezya Games — Мой Портал</title>
+    <title>Nezya Games — Мультипортал</title>
     <style>
+        /* БАЗОВЫЕ ЦВЕТА (Тема по умолчанию: Синяя) */
         :root {
             --primary: #ffd700;
             --bg: #0b0e14;
             --card-bg: rgba(23, 27, 38, 0.9);
             --accent: #00d2ff;
+            --grad: radial-gradient(circle at 20% 30%, rgba(0, 210, 255, 0.1) 0%, transparent 40%);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        /* КРАСНАЯ ТЕМА */
+        [data-theme="red"] {
+            --bg: #140b0b;
+            --card-bg: rgba(38, 23, 23, 0.9);
+            --accent: #ff4d4d;
+            --grad: radial-gradient(circle at 20% 30%, rgba(255, 77, 77, 0.1) 0%, transparent 40%);
+        }
+
+        /* ЗЕЛЕНАЯ ТЕМА */
+        [data-theme="green"] {
+            --bg: #0b140c;
+            --card-bg: rgba(23, 38, 24, 0.9);
+            --accent: #4ae38d;
+            --grad: radial-gradient(circle at 20% 30%, rgba(74, 227, 141, 0.1) 0%, transparent 40%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, border-color 0.3s; }
         
         body { 
             background: var(--bg); color: white; min-height: 100vh;
-            background: radial-gradient(circle at 20% 30%, rgba(0, 210, 255, 0.05) 0%, transparent 40%),
-                        url('https://www.transparenttextures.com/patterns/stardust.png'), #0b0e14;
+            background-image: var(--grad), url('https://www.transparenttextures.com/patterns/stardust.png');
             background-attachment: fixed;
         }
 
-        /* Шапка */
         header {
-            padding: 15px 25px; background: rgba(11, 14, 20, 0.85); backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 15px 25px; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--accent);
             position: sticky; top: 0; z-index: 100;
             display: flex; justify-content: space-between; align-items: center;
         }
 
-        .user-profile { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 8px 15px; border-radius: 12px; }
-        .avatar { width: 40px; height: 40px; border: 2px solid var(--primary); border-radius: 8px; }
+        .header-controls { display: flex; gap: 15px; align-items: center; }
 
-        /* Контейнер */
-        .container { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
-        
-        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .main-title { font-size: 32px; text-transform: uppercase; letter-spacing: 2px; }
+        /* Кнопка смены темы */
+        .theme-btn {
+            background: var(--card-bg); border: 1px solid var(--accent);
+            color: white; padding: 8px; border-radius: 10px; cursor: pointer; font-size: 18px;
+        }
 
-        /* Кнопка добавления */
         .add-game-btn {
-            background: transparent; border: 2px dashed var(--primary); color: var(--primary);
-            padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s;
+            background: var(--accent); color: black; border: none;
+            padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold;
         }
-        .add-game-btn:hover { background: var(--primary); color: black; }
 
-        /* Сетка игр */
-        .game-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;
-        }
+        .container { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
+        .main-title { font-size: 32px; text-transform: uppercase; margin-bottom: 30px; border-left: 5px solid var(--accent); padding-left: 15px; }
+
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
 
         .game-card {
             background: var(--card-bg); border-radius: 20px; overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.3s;
-            display: flex; flex-direction: column; position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05); position: relative;
         }
-        .game-card:hover { transform: translateY(-8px); border-color: var(--primary); }
+        .game-card:hover { transform: translateY(-5px); border-color: var(--accent); }
 
         .thumb { width: 100%; height: 160px; background-size: cover; background-position: center; }
-        .info { padding: 20px; flex-grow: 1; }
+        .info { padding: 20px; }
         .btn-launch {
-            display: block; width: 100%; background: var(--primary); color: black;
+            display: block; width: 100%; background: var(--accent); color: black;
             text-align: center; padding: 12px; border-radius: 10px; text-decoration: none;
-            font-weight: 900; text-transform: uppercase; font-size: 13px;
+            font-weight: 900; text-transform: uppercase;
         }
 
-        /* Модальное окно */
+        /* Модалка */
         .modal {
             position: fixed; inset: 0; background: rgba(0,0,0,0.9);
             display: none; align-items: center; justify-content: center; z-index: 1000;
         }
         .modal-content {
-            background: #161b22; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px;
-            border: 1px solid var(--primary);
+            background: var(--bg); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px;
+            border: 1px solid var(--accent);
         }
-        .modal-content h3 { margin-bottom: 20px; color: var(--primary); }
         input {
-            width: 100%; padding: 12px; margin-bottom: 15px; background: #0b0e14;
+            width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(255,255,255,0.05);
             border: 1px solid #333; color: white; border-radius: 8px;
         }
-        .save-btn {
-            width: 100%; padding: 12px; background: var(--accent); border: none;
-            border-radius: 10px; font-weight: bold; cursor: pointer;
-        }
-        .close-modal { margin-top: 10px; color: #777; cursor: pointer; display: block; text-align: center; }
 
         .delete-btn {
-            position: absolute; top: 10px; right: 10px; background: rgba(255,0,0,0.7);
+            position: absolute; top: 10px; right: 10px; background: #ff4d4d;
             border: none; color: white; width: 25px; height: 25px; border-radius: 50%; cursor: pointer;
         }
     </style>
 </head>
-<body>
+<body id="bodyTag">
 
     <header>
-        <div class="user-profile">
-            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Nezya" class="avatar">
-            <div>
-                <div id="username" style="font-weight: bold; font-size: 14px;">NEZYA PLAYER</div>
-                <div style="font-size: 12px; color: var(--primary);">🪙 <span id="coins">0</span></div>
-            </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Nezya" style="width: 35px; border-radius: 5px;">
+            <div id="username" style="font-weight: bold;">NEZYA PLAYER</div>
         </div>
-        <button class="add-game-btn" onclick="toggleModal(true)">+ ДОБАВИТЬ ИГРУ</button>
+        <div class="header-controls">
+            <button class="theme-btn" onclick="nextTheme()" title="Сменить тему">🎨</button>
+            <button class="add-game-btn" onclick="toggleModal(true)">+ ИГРА</button>
+        </div>
     </header>
 
     <div class="container">
-        <div class="header-flex">
-            <h1 class="main-title">Тапай по мне</h1>
-        </div>
-        
-        <div class="game-grid" id="gameGrid">
-            </div>
+        <h1 class="main-title">Тапай по мне</h1>
+        <div class="game-grid" id="gameGrid"></div>
     </div>
 
     <div class="modal" id="addModal">
         <div class="modal-content">
-            <h3>Новая игра</h3>
+            <h3 style="margin-bottom: 15px;">Добавить свою игру</h3>
             <input type="text" id="gameTitle" placeholder="Название игры">
             <input type="text" id="gameUrl" placeholder="Ссылка (https://...)">
             <input type="text" id="gameImg" placeholder="Ссылка на обложку (URL)">
-            <button class="save-btn" onclick="saveNewGame()">СОХРАНИТЬ</button>
-            <span class="close-modal" onclick="toggleModal(false)">Отмена</span>
+            <button class="btn-launch" onclick="saveNewGame()" style="border:none; cursor:pointer;">СОХРАНИТЬ</button>
+            <p onclick="toggleModal(false)" style="text-align:center; margin-top:15px; cursor:pointer; opacity:0.5;">Отмена</p>
         </div>
     </div>
 
     <script>
-        // Базовые игры, которые есть всегда
+        const themes = ['blue', 'red', 'green'];
+        let currentThemeIndex = themes.indexOf(localStorage.getItem('theme') || 'blue');
+
+        function applyTheme() {
+            const theme = themes[currentThemeIndex];
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+
+        function nextTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            applyTheme();
+        }
+
         const defaultGames = [
             {
                 title: "Тапай по мне",
                 url: "https://jeksera6564-sudo.github.io/nezya/index.html",
                 img: "https://img.freepik.com/free-vector/pixel-art-mystical-background_23-2149114838.jpg"
-            },
-            {
-                title: "Золотая Змейка",
-                url: "snake/index.html",
-                img: "https://img.freepik.com/free-vector/green-snake-pixel-art-style_23-2149151551.jpg"
             }
         ];
 
-        function toggleModal(show) {
-            document.getElementById('addModal').style.display = show ? 'flex' : 'none';
-        }
+        function toggleModal(show) { document.getElementById('addModal').style.display = show ? 'flex' : 'none'; }
 
         function saveNewGame() {
             const title = document.getElementById('gameTitle').value;
             const url = document.getElementById('gameUrl').value;
             const img = document.getElementById('gameImg').value;
-
-            if(!title || !url) return alert("Заполни название и ссылку!");
+            if(!title || !url) return alert("Введите данные!");
 
             const customGames = JSON.parse(localStorage.getItem('customGames')) || [];
             customGames.push({ title, url, img: img || 'https://via.placeholder.com/300x160' });
             localStorage.setItem('customGames', JSON.stringify(customGames));
-
-            location.reload(); // Перезагружаем для обновления списка
+            location.reload();
         }
 
         function deleteGame(index) {
@@ -167,18 +173,9 @@
         function renderGames() {
             const grid = document.getElementById('gameGrid');
             const customGames = JSON.parse(localStorage.getItem('customGames')) || [];
-            
             grid.innerHTML = '';
-
-            // Рендерим стандартные игры
-            defaultGames.forEach(game => {
-                grid.innerHTML += createCardHTML(game, false);
-            });
-
-            // Рендерим добавленные игры
-            customGames.forEach((game, index) => {
-                grid.innerHTML += createCardHTML(game, true, index);
-            });
+            defaultGames.forEach(game => grid.innerHTML += createCardHTML(game, false));
+            customGames.forEach((game, index) => grid.innerHTML += createCardHTML(game, true, index));
         }
 
         function createCardHTML(game, isCustom, index) {
@@ -188,22 +185,14 @@
                     <div class="thumb" style="background-image: url('${game.img}')"></div>
                     <div class="info">
                         <h3>${game.title}</h3>
-                        <a href="${game.url}" class="btn-launch">Запустить</a>
+                        <a href="${game.url}" class="btn-launch">Играть</a>
                     </div>
-                </div>
-            `;
-        }
-
-        // Синхронизация монет
-        function sync() {
-            const coins = localStorage.getItem("coins") || 0;
-            document.getElementById("coins").textContent = Math.floor(coins).toLocaleString();
+                </div>`;
         }
 
         window.onload = () => {
+            applyTheme();
             renderGames();
-            sync();
-            setInterval(sync, 2000);
         };
     </script>
 </body>
