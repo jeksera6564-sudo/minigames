@@ -3,169 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nezya Games — Портал</title>
+    <title>Nezya Games — Игровой Портал</title>
     <style>
         :root {
             --primary: #ffd700;
             --bg: #05050a;
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-bg: rgba(255, 255, 255, 0.07);
             --accent: #00d2ff;
+            --legendary: #ff00ff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         
         body { 
             background: var(--bg); 
             color: white; 
             overflow-x: hidden;
             min-height: 100vh;
+            background: radial-gradient(circle at top right, #1a1a2e, #05050a);
         }
 
-        /* Шапка с профилем */
+        /* Анимированный фон (частицы) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
         header {
-            padding: 20px;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--primary);
+            padding: 15px 25px;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px);
+            border-bottom: 2px solid var(--primary);
             position: sticky;
             top: 0;
             z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
 
         .user-info { display: flex; align-items: center; gap: 15px; }
-        .avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); }
-        .stats-top { display: flex; gap: 20px; font-weight: 900; font-size: 14px; }
-        .stats-top span { color: var(--primary); }
+        .avatar-container { position: relative; }
+        .avatar { width: 50px; height: 50px; border-radius: 12px; border: 2px solid var(--primary); object-fit: cover; }
+        .lvl-badge { 
+            position: absolute; bottom: -5px; right: -5px; 
+            background: var(--primary); color: black; 
+            font-size: 10px; font-weight: 900; padding: 2px 5px; 
+            border-radius: 4px; border: 2px solid var(--bg);
+        }
 
-        /* Контейнер игр */
-        .container { padding: 25px; max-width: 1200px; margin: 0 auto; }
-        h1 { margin-bottom: 25px; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
+        .user-text h2 { font-size: 16px; letter-spacing: 1px; }
+        .rank-text { font-size: 10px; color: var(--accent); text-transform: uppercase; font-weight: 900; }
+
+        .stats-top { display: flex; gap: 15px; margin-top: 4px; font-size: 13px; }
+        .stats-top b { color: var(--primary); }
+
+        .container { padding: 30px 20px; max-width: 1100px; margin: 0 auto; }
+        .section-title { 
+            margin-bottom: 30px; font-size: 28px; 
+            text-transform: uppercase; letter-spacing: 4px;
+            text-shadow: 0 0 10px var(--primary);
+        }
 
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
         }
 
-        /* Карточка игры */
         .game-card {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: 24px;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-decoration: none;
             color: white;
             position: relative;
         }
 
         .game-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
+            transform: translateY(-12px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.15);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .game-thumb {
-            width: 100%;
-            height: 160px;
-            background-size: cover;
-            background-position: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            width: 100%; height: 180px;
+            background-size: cover; background-position: center;
+            position: relative;
         }
 
-        .game-info { padding: 15px; }
-        .game-info h3 { margin-bottom: 5px; font-size: 18px; color: var(--primary); }
-        .game-info p { font-size: 12px; color: #aaa; line-height: 1.4; }
+        .game-thumb::after {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        }
+
+        .game-info { padding: 20px; }
+        .game-info h3 { margin-bottom: 8px; font-size: 20px; color: #fff; }
+        .game-info p { font-size: 13px; color: #ccc; line-height: 1.5; height: 40px; overflow: hidden; }
 
         .play-btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 20px;
-            background: var(--accent);
-            color: black;
-            border-radius: 10px;
-            font-weight: 900;
-            font-size: 12px;
-            text-transform: uppercase;
+            display: inline-block; margin-top: 15px;
+            padding: 10px 25px; background: var(--primary);
+            color: black; border-radius: 12px;
+            font-weight: 900; font-size: 13px;
+            text-transform: uppercase; transition: 0.3s;
         }
 
+        .game-card:hover .play-btn { background: #fff; transform: scale(1.05); }
+
         .badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--primary);
-            color: black;
-            font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-weight: 900;
+            position: absolute; top: 15px; right: 15px;
+            background: var(--primary); color: black;
+            font-size: 11px; padding: 4px 10px;
+            border-radius: 8px; font-weight: 900; z-index: 10;
         }
+
+        footer { text-align: center; padding: 40px; color: #444; font-size: 12px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="user-info">
-            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="avatar">
-            <div>
-                <div id="username" style="font-weight: 900;">Игрок</div>
+            <div class="avatar-container">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Nezya" class="avatar">
+                <div class="lvl-badge" id="lvl-num">1</div>
+            </div>
+            <div class="user-text">
+                <h2 id="username">NEZYA PLAYER</h2>
+                <div class="rank-text" id="user-rank">НОВИЧОК</div>
                 <div class="stats-top">
-                    <div>🪙 <span id="coins">0</span></div>
-                    <div>💎 <span id="crystals">0</span></div>
+                    <div>🪙 <b id="coins">0</b></div>
+                    <div>💎 <b id="crystals">0</b></div>
                 </div>
             </div>
         </div>
-        <div style="font-size: 20px;">🎮</div>
+        <div style="cursor: pointer; font-size: 24px;">🔔</div>
     </header>
 
     <div class="container">
-        <h1>Твои игры</h1>
+        <h1 class="section-title">Библиотека Игр</h1>
         
         <div class="game-grid">
             
-            <a href="clicker/index.html" class="game-card">
-                <div class="badge">LIVE</div>
+            <a href="https://jeksera6564-sudo.github.io/nezya/index.html" class="game-card">
+                <div class="badge">ТОП ИГРА</div>
                 <div class="game-thumb" style="background-image: url('https://img.freepik.com/free-vector/pixel-art-mystical-background_23-2149114838.jpg');"></div>
                 <div class="game-info">
                     <h3>Nezya Clicker</h3>
-                    <p>Прокачивай героев, кликай и зарабатывай миллионы монет!</p>
+                    <p>Стань самым богатым магнатом, нанимай героев и захватывай рынок!</p>
+                    <div class="play-btn">Запустить</div>
+                </div>
+            </a>
+
+            <a href="snake/index.html" class="game-card">
+                <div class="badge" style="background: #4ae38d;">MINI-GAME</div>
+                <div class="game-thumb" style="background-image: url('https://img.freepik.com/free-vector/green-snake-pixel-art-style_23-2149151551.jpg');"></div>
+                <div class="game-info">
+                    <h3>Golden Snake</h3>
+                    <p>Классическая змейка, где каждое яблоко дает +10 монет в общий кошелек.</p>
                     <div class="play-btn">Играть</div>
                 </div>
             </a>
 
-            <a href="#" class="game-card" onclick="alert('Скоро появится!')">
-                <div class="badge" style="background: #555;">COMING SOON</div>
+            <div class="game-card" style="opacity: 0.6; cursor: default;">
+                <div class="badge" style="background: #555;">В РАЗРАБОТКЕ</div>
                 <div class="game-thumb" style="background-image: url('https://img.freepik.com/free-vector/cyberpunk-street-night-scene_23-2148782484.jpg'); filter: grayscale(1);"></div>
                 <div class="game-info">
-                    <h3>Cyber Runner</h3>
-                    <p>Скоростная гонка по неоновому городу. В разработке...</p>
-                    <div class="play-btn" style="background: #444;">Закрыто</div>
+                    <h3>Cyber Quest</h3>
+                    <p>Грандиозное приключение в мире будущего. Ожидайте в 2026.</p>
+                    <div class="play-btn" style="background: #333; color: #777;">Закрыто</div>
                 </div>
-            </a>
+            </div>
 
         </div>
     </div>
 
+    <footer>
+        &copy; 2026 NEZYA GAMES HUB • POWERED BY GITHUB
+    </footer>
+
     <script>
-        // Функция для обновления общих данных
-        function loadGlobalStats() {
-            const coins = localStorage.getItem("coins") || 0;
+        function updateStats() {
+            const coins = Number(localStorage.getItem("coins")) || 0;
             const crystals = localStorage.getItem("crystals") || 0;
             const name = localStorage.getItem("userName") || "Nezya Player";
 
             document.getElementById("coins").textContent = Math.floor(coins).toLocaleString();
             document.getElementById("crystals").textContent = crystals;
-            document.getElementById("username").textContent = name;
+            document.getElementById("username").textContent = name.toUpperCase();
+
+            // Логика уровней и рангов
+            let lvl = 1;
+            let rank = "Новичок";
+            let color = "#00d2ff";
+
+            if(coins > 1000) { lvl = 2; rank = "Опытный"; color = "#4ae38d"; }
+            if(coins > 10000) { lvl = 5; rank = "Бизнесмен"; color = "#ffd700"; }
+            if(coins > 100000) { lvl = 10; rank = "Магнат"; color = "#ff8c00"; }
+            if(coins > 1000000) { lvl = 50; rank = "ЛЕГЕНДА"; color = "#ff00ff"; }
+
+            const rankEl = document.getElementById("user-rank");
+            rankEl.textContent = rank;
+            rankEl.style.color = color;
+            document.getElementById("lvl-num").textContent = lvl;
         }
 
-        // Загружаем статистику при входе
-        window.onload = loadGlobalStats;
+        // Запуск при загрузке и обновление каждые 2 секунды
+        window.onload = updateStats;
+        setInterval(updateStats, 2000);
 
-        // Каждую секунду проверяем баланс (если он изменился в другом окне)
-        setInterval(loadGlobalStats, 2000);
+        // Маленький эффект для консоли
+        console.log("%c Nezya Games Portal Loaded ", "background: #ffd700; color: #000; font-weight: bold;");
     </script>
 </body>
 </html>
