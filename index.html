@@ -5,21 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Crystal Merge</title>
 
-<!-- 🔸 ЗАГЛУШКА ЯНДЕКС SDK (для Яндекс Игр) -->
-<!--
-<script src="https://yandex.ru/games/sdk/v2"></script>
-<script>
-YaGames.init().then(ysdk => {
-  window.ysdk = ysdk;
-});
-</script>
--->
-
 <style>
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:radial-gradient(circle at top,#1b1f3a,#090b18);
+  background:radial-gradient(circle at top,#1c2042,#090b18);
   color:#fff;
   display:flex;
   flex-direction:column;
@@ -30,17 +20,17 @@ h1{margin:8px}
 
 #stats{
   display:flex;
-  gap:15px;
-  margin-bottom:6px;
+  gap:18px;
   font-size:16px;
 }
 
 #level{
-  margin-bottom:10px;
+  margin:6px 0 12px;
   font-weight:bold;
 }
 
 #board{
+  position:relative;
   display:grid;
   grid-template-columns:repeat(5,72px);
   gap:10px;
@@ -49,49 +39,59 @@ h1{margin:8px}
 .cell{
   width:72px;
   height:72px;
-  background:#20244a;
+  background:#22275a;
   border-radius:18px;
   display:flex;
   align-items:center;
   justify-content:center;
   font-size:30px;
   cursor:pointer;
-  transition:0.25s;
-  box-shadow:0 0 12px rgba(0,0,0,0.5);
+  transition:transform .25s;
+  box-shadow:0 0 12px rgba(0,0,0,.5);
 }
 
 .cell:hover{transform:scale(1.06)}
 .cell.selected{outline:3px solid gold}
 
-.merge{animation:merge 0.4s ease}
+.merge{
+  animation:merge .35s ease;
+}
 @keyframes merge{
   0%{transform:scale(1)}
   50%{transform:scale(1.5)}
   100%{transform:scale(1)}
 }
 
-.rare{box-shadow:0 0 15px 4px rgba(0,255,255,0.7)}
+.move{
+  animation:move .25s ease;
+}
+@keyframes move{
+  0%{transform:translate(var(--dx),var(--dy))}
+  100%{transform:translate(0,0)}
+}
+
+.rare{box-shadow:0 0 16px 4px rgba(0,255,255,.7)}
 .legendary{
-  box-shadow:0 0 25px 8px rgba(255,215,0,0.9);
-  animation:pulse 1.5s infinite;
+  box-shadow:0 0 28px 8px rgba(255,215,0,.9);
+  animation:pulse 1.4s infinite;
 }
 @keyframes pulse{
   0%{transform:scale(1)}
-  50%{transform:scale(1.1)}
+  50%{transform:scale(1.12)}
   100%{transform:scale(1)}
 }
 
 button{
-  margin-top:10px;
-  padding:10px 18px;
+  margin-top:12px;
+  padding:10px 20px;
   border:none;
-  border-radius:12px;
+  border-radius:14px;
   background:#4cafef;
   color:#000;
   font-weight:bold;
   cursor:pointer;
 }
-button:disabled{opacity:0.5}
+button:disabled{opacity:.5}
 </style>
 </head>
 
@@ -104,7 +104,9 @@ button:disabled{opacity:0.5}
   <div>⚡ <span id="boosts">0</span></div>
 </div>
 
-<div id="level">Уровень: <span id="lvl">1</span> | Цель: <span id="goal">100</span> монет</div>
+<div id="level">
+  Уровень <span id="lvl">1</span> · Цель <span id="goal">100</span> 🪙
+</div>
 
 <div id="board"></div>
 
@@ -119,41 +121,34 @@ const lvlEl=document.getElementById("lvl");
 const goalEl=document.getElementById("goal");
 
 const crystals=[
-  {emoji:"💎", type:"normal"},
-  {emoji:"🔷", type:"normal"},
-  {emoji:"🔮", type:"normal"},
-  {emoji:"💠", type:"rare"},
-  {emoji:"🟣", type:"rare"},
-  {emoji:"👑", type:"legendary"}
+  {emoji:"💎",type:"normal"},
+  {emoji:"🔷",type:"normal"},
+  {emoji:"🔮",type:"normal"},
+  {emoji:"💠",type:"rare"},
+  {emoji:"🟣",type:"rare"},
+  {emoji:"👑",type:"legendary"},
+  {emoji:"🌟",type:"legendary"}
 ];
 
 let cells=[], coins=0, boosts=0, level=1, selected=null;
 
-function goalForLevel(lvl){
-  return 100 + lvl*80;
-}
+const goalForLevel=l=>100+l*90;
 
 function save(){
-  localStorage.setItem("crystalSave",JSON.stringify({
-    cells,coins,boosts,level
-  }));
+  localStorage.setItem("mergeSave",JSON.stringify({cells,coins,boosts,level}));
 }
-
 function load(){
-  const d=localStorage.getItem("crystalSave");
+  const d=localStorage.getItem("mergeSave");
   if(d){
     const s=JSON.parse(d);
-    cells=s.cells;
-    coins=s.coins;
-    boosts=s.boosts;
-    level=s.level;
+    cells=s.cells; coins=s.coins; boosts=s.boosts; level=s.level;
   }else init();
 }
 
 function randomCrystal(){
-  let r=Math.random();
-  if(r<0.02) return {level:5};     // легендарный
-  if(r<0.12) return {level:3};     // редкий
+  const r=Math.random();
+  if(r<0.01) return {level:6};
+  if(r<0.08) return {level:4};
   return {level:0};
 }
 
@@ -167,12 +162,12 @@ function init(){
 function render(){
   board.innerHTML="";
   cells.forEach((c,i)=>{
+    const d=crystals[c.level]||crystals[0];
     const div=document.createElement("div");
     div.className="cell";
-    const data=crystals[c.level]||crystals[0];
-    div.textContent=data.emoji;
-    if(data.type==="rare") div.classList.add("rare");
-    if(data.type==="legendary") div.classList.add("legendary");
+    div.textContent=d.emoji;
+    if(d.type==="rare") div.classList.add("rare");
+    if(d.type==="legendary") div.classList.add("legendary");
     if(selected===i) div.classList.add("selected");
     div.onclick=()=>clickCell(i);
     board.appendChild(div);
@@ -184,12 +179,9 @@ function render(){
 }
 
 function clickCell(i){
-  if(selected===null){selected=i;}
-  else{
-    if(isNeighbor(selected,i)) merge(selected,i);
-    selected=null;
-  }
-  render();
+  if(selected===null){selected=i; render(); return;}
+  if(isNeighbor(selected,i)) animateMove(selected,i,()=>chainMerge(selected,i));
+  selected=null;
 }
 
 function isNeighbor(a,b){
@@ -198,42 +190,71 @@ function isNeighbor(a,b){
   return Math.abs(ax-bx)+Math.abs(ay-by)===1;
 }
 
-function merge(a,b){
-  if(cells[a].level===cells[b].level){
-    cells[b].level++;
-    cells[a]=randomCrystal();
+function animateMove(a,b,cb){
+  const el=board.children[a];
+  const ax=a%size, ay=Math.floor(a/size);
+  const bx=b%size, by=Math.floor(b/size);
+  el.style.setProperty("--dx",(bx-ax)*82+"px");
+  el.style.setProperty("--dy",(by-ay)*82+"px");
+  el.classList.add("move");
+  setTimeout(()=>{
+    el.classList.remove("move");
+    cb();
+  },250);
+}
 
-    let gain=10*cells[b].level;
-    if(cells[b].level>=5) gain*=5; // легендарный бонус
+function chainMerge(a,b){
+  if(cells[a].level!==cells[b].level){render(); return;}
+
+  let target=b, source=a;
+
+  while(cells[source] && cells[target] && cells[source].level===cells[target].level){
+    cells[target].level++;
+    cells[source]=randomCrystal();
+
+    let gain=10*cells[target].level;
+    if(cells[target].level>=5) gain*=5;
     coins+=gain;
 
-    if(Math.random()<0.35) boosts++;
-
-    const el=board.children[b];
+    const el=board.children[target];
     el.classList.add("merge");
-    setTimeout(()=>el.classList.remove("merge"),400);
+    setTimeout(()=>el.classList.remove("merge"),300);
 
-    checkLevel();
-    save();
+    source=findNeighborSame(target);
   }
+
+  if(Math.random()<0.35) boosts++;
+  checkLevel();
+  save();
+  render();
+}
+
+function findNeighborSame(i){
+  const x=i%size, y=Math.floor(i/size);
+  const dirs=[[1,0],[-1,0],[0,1],[0,-1]];
+  for(const[dX,dY] of dirs){
+    const nx=x+dX, ny=y+dY;
+    if(nx>=0&&ny>=0&&nx<size&&ny<size){
+      const ni=ny*size+nx;
+      if(cells[ni].level===cells[i].level) return ni;
+    }
+  }
+  return null;
 }
 
 function checkLevel(){
   if(coins>=goalForLevel(level)){
     level++;
     boosts+=2;
-
-    // 🔸 МЕСТО ДЛЯ ПОКАЗА РЕКЛАМЫ ЯНДЕКС
-    /*
-    ysdk.adv.showFullscreenAdv();
-    */
+    // место для рекламы Яндекс
+    // ysdk.adv.showFullscreenAdv();
   }
 }
 
 document.getElementById("shuffleBtn").onclick=()=>{
   if(boosts<=0) return;
   boosts--;
-  cells.sort(()=>Math.random()-0.5);
+  cells.sort(()=>Math.random()-.5);
   save();
   render();
 };
