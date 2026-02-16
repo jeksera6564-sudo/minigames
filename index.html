@@ -1,199 +1,103 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nezya Games — Мультипортал</title>
+    <title>NEON CASINO — VIP EDITION</title>
     <style>
-        /* БАЗОВЫЕ ЦВЕТА (Тема по умолчанию: Синяя) */
         :root {
-            --primary: #ffd700;
-            --bg: #0b0e14;
-            --card-bg: rgba(23, 27, 38, 0.9);
-            --accent: #00d2ff;
-            --grad: radial-gradient(circle at 20% 30%, rgba(0, 210, 255, 0.1) 0%, transparent 40%);
+            --gold: #ffd700;
+            --neon-blue: #00d2ff;
+            --neon-purple: #9d00ff;
+            --neon-red: #ff3131;
+            --neon-green: #39ff14;
+            --bg: #020205;
         }
 
-        /* КРАСНАЯ ТЕМА */
-        [data-theme="red"] {
-            --bg: #140b0b;
-            --card-bg: rgba(38, 23, 23, 0.9);
-            --accent: #ff4d4d;
-            --grad: radial-gradient(circle at 20% 30%, rgba(255, 77, 77, 0.1) 0%, transparent 40%);
-        }
-
-        /* ЗЕЛЕНАЯ ТЕМА */
-        [data-theme="green"] {
-            --bg: #0b140c;
-            --card-bg: rgba(23, 38, 24, 0.9);
-            --accent: #4ae38d;
-            --grad: radial-gradient(circle at 20% 30%, rgba(74, 227, 141, 0.1) 0%, transparent 40%);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, border-color 0.3s; }
-        
-        body { 
-            background: var(--bg); color: white; min-height: 100vh;
-            background-image: var(--grad), url('https://www.transparenttextures.com/patterns/stardust.png');
-            background-attachment: fixed;
-        }
-
-        header {
-            padding: 15px 25px; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--accent);
-            position: sticky; top: 0; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        .header-controls { display: flex; gap: 15px; align-items: center; }
-
-        /* Кнопка смены темы */
-        .theme-btn {
-            background: var(--card-bg); border: 1px solid var(--accent);
-            color: white; padding: 8px; border-radius: 10px; cursor: pointer; font-size: 18px;
-        }
-
-        .add-game-btn {
-            background: var(--accent); color: black; border: none;
-            padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold;
-        }
-
-        .container { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
-        .main-title { font-size: 32px; text-transform: uppercase; margin-bottom: 30px; border-left: 5px solid var(--accent); padding-left: 15px; }
-
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
-
-        .game-card {
-            background: var(--card-bg); border-radius: 20px; overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05); position: relative;
-        }
-        .game-card:hover { transform: translateY(-5px); border-color: var(--accent); }
-
-        .thumb { width: 100%; height: 160px; background-size: cover; background-position: center; }
-        .info { padding: 20px; }
-        .btn-launch {
-            display: block; width: 100%; background: var(--accent); color: black;
-            text-align: center; padding: 12px; border-radius: 10px; text-decoration: none;
-            font-weight: 900; text-transform: uppercase;
-        }
-
-        /* Модалка */
-        .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-            display: none; align-items: center; justify-content: center; z-index: 1000;
-        }
-        .modal-content {
-            background: var(--bg); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px;
-            border: 1px solid var(--accent);
-        }
-        input {
-            width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(255,255,255,0.05);
-            border: 1px solid #333; color: white; border-radius: 8px;
-        }
-
-        .delete-btn {
-            position: absolute; top: 10px; right: 10px; background: #ff4d4d;
-            border: none; color: white; width: 25px; height: 25px; border-radius: 50%; cursor: pointer;
-        }
-    </style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#1e3c72,#2a5298);min-height:100vh;color:#fff;padding:20px}
+.container{max-width:1000px;margin:0 auto}
+h1{text-align:center;margin-bottom:20px;font-size:2.5em}
+.stats{display:flex;justify-content:center;gap:20px;margin-bottom:20px;flex-wrap:wrap}
+.stat{background:rgba(255,255,255,0.1);padding:15px 25px;border-radius:10px;text-align:center}
+.stat-value{font-size:1.8em;font-weight:bold;color:#ffd700}
+.controls{text-align:center;margin:20px 0}
+button{background:#4ecdc4;border:none;color:#fff;padding:12px 24px;margin:5px;border-radius:25px;cursor:pointer;font-size:1em;font-weight:bold}
+button:hover{background:#45b7b8;transform:scale(1.05)}
+button:disabled{background:#666;cursor:not-allowed}
+.game-area{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:600px;margin:20px auto;padding:20px;background:rgba(0,0,0,0.2);border-radius:15px}
+.item{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-weight:bold;transition:all 0.2s;border:2px solid rgba(255,255,255,0.3)}
+.item:hover{transform:scale(1.1)}
+.item.selected{border-color:#fff;box-shadow:0 0 20px rgba(255,255,255,0.5);animation:pulse 0.5s infinite alternate}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.05)}}
+.empty{background:rgba(255,255,255,0.05);border:2px dashed rgba(255,255,255,0.2);cursor:default}
+.shop{background:rgba(255,255,255,0.1);padding:20px;border-radius:15px;margin-top:20px}
+.shop h2{text-align:center;margin-bottom:15px}
+.shop-grid{display:flex;justify-content:center;gap:15px;flex-wrap:wrap}
+.shop-item{background:rgba(255,255,255,0.1);padding:15px;border-radius:10px;cursor:pointer;text-align:center;min-width:120px}
+.shop-item:hover{background:rgba(255,255,255,0.2)}
+.victory{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:1000}
+.victory.active{display:flex}
+.victory h2{font-size:3em;color:#ffd700;margin-bottom:20px}
+</style>
 </head>
-<body id="bodyTag">
+<body>
+<div class="container">
+<h1>🔥 MERGE 100 🔥</h1>
+<div class="stats">
+<div class="stat"><div>💰 Монеты</div><div class="stat-value" id="coins">10</div></div>
+<div class="stat"><div>⭐ Опыт</div><div class="stat-value" id="exp">0</div></div>
+<div class="stat"><div>🏆 Макс. Ур.</div><div class="stat-value" id="maxLevel">1</div></div>
+<div class="stat"><div>💵/сек</div><div class="stat-value" id="income">1</div></div>
+</div>
+<div class="controls">
+<button onclick="game.spawnItem()">🎲 Создать (10💰)</button>
+<button onclick="game.buyAutoMerge()" id="autoBtn">🤖 Авто (1000💰)</button>
+</div>
+<div class="game-area" id="gameArea"></div>
+<div class="shop">
+<h2>🛒 Магазин</h2>
+<div class="shop-grid">
+<div class="shop-item" onclick="game.buySlot()"><div>📦 Слот</div><div id="slotPrice">100💰</div></div>
+<div class="shop-item" onclick="game.boostIncome()"><div>⚡ x2 Доход</div><div id="boostPrice">500💰</div></div>
+<div class="shop-item" onclick="game.buyLevel()"><div>🚀 Уровень 5</div><div id="levelPrice">5000💰</div></div>
+</div>
+</div>
+</div>
+<div class="victory" id="victory">
+<h2>🎉 ПОБЕДА! 🎉</h2>
+<p>Вы достигли 100 уровня!</p>
+<p>Финальный счёт: <span id="finalScore"></span></p>
+<button onclick="location.reload()">🔄 Заново</button>
+</div>
+<script>
+class Game{
+constructor(){
+this.coins=10;this.exp=0;this.maxLevel=1;this.items=[];this.slots=12;this.selected=null;this.incomeMult=1;this.autoMerge=false;
+this.prices={slot:100,boost:500,level:5,levelCost:5000,auto:1000};
+this.colors=['#2ecc71','#3498db','#9b59b6','#e74c3c','#f39c12','#1abc9c','#34495e','#e67e22','#95a5a6','#d35400'];
+this.emojis=['🌱','🌿','🌲','💎','🔮','⚡','🔥','⭐','🌟','🪐'];
+this.init();
+}
 
-    <header>
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Nezya" style="width: 35px; border-radius: 5px;">
-            <div id="username" style="font-weight: bold;">NEZYA PLAYER</div>
-        </div>
-        <div class="header-controls">
-            <button class="theme-btn" onclick="nextTheme()" title="Сменить тему">🎨</button>
-            <button class="add-game-btn" onclick="toggleModal(true)">+ ИГРА</button>
-        </div>
-    </header>
-
-    <div class="container">
-        <h1 class="main-title">Тапай по мне</h1>
-        <div class="game-grid" id="gameGrid"></div>
-    </div>
-
-    <div class="modal" id="addModal">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 15px;">Добавить свою игру</h3>
-            <input type="text" id="gameTitle" placeholder="Название игры">
-            <input type="text" id="gameUrl" placeholder="Ссылка (https://...)">
-            <input type="text" id="gameImg" placeholder="Ссылка на обложку (URL)">
-            <button class="btn-launch" onclick="saveNewGame()" style="border:none; cursor:pointer;">СОХРАНИТЬ</button>
-            <p onclick="toggleModal(false)" style="text-align:center; margin-top:15px; cursor:pointer; opacity:0.5;">Отмена</p>
-        </div>
-    </div>
-
-    <script>
-        const themes = ['blue', 'red', 'green'];
-        let currentThemeIndex = themes.indexOf(localStorage.getItem('theme') || 'blue');
-
-        function applyTheme() {
-            const theme = themes[currentThemeIndex];
-            document.body.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-        }
-
-        function nextTheme() {
-            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-            applyTheme();
-        }
-
-        const defaultGames = [
-            {
-                title: "Тапай по мне",
-                url: "https://jeksera6564-sudo.github.io/nezya/index.html",
-                img: "https://img.freepik.com/free-vector/pixel-art-mystical-background_23-2149114838.jpg"
-            }
-        ];
-
-        function toggleModal(show) { document.getElementById('addModal').style.display = show ? 'flex' : 'none'; }
-
-        function saveNewGame() {
-            const title = document.getElementById('gameTitle').value;
-            const url = document.getElementById('gameUrl').value;
-            const img = document.getElementById('gameImg').value;
-            if(!title || !url) return alert("Введите данные!");
-
-            const customGames = JSON.parse(localStorage.getItem('customGames')) || [];
-            customGames.push({ title, url, img: img || 'https://via.placeholder.com/300x160' });
-            localStorage.setItem('customGames', JSON.stringify(customGames));
-            location.reload();
-        }
-
-        function deleteGame(index) {
-            let customGames = JSON.parse(localStorage.getItem('customGames')) || [];
-            customGames.splice(index, 1);
-            localStorage.setItem('customGames', JSON.stringify(customGames));
-            renderGames();
-        }
-
-        function renderGames() {
-            const grid = document.getElementById('gameGrid');
-            const customGames = JSON.parse(localStorage.getItem('customGames')) || [];
-            grid.innerHTML = '';
-            defaultGames.forEach(game => grid.innerHTML += createCardHTML(game, false));
-            customGames.forEach((game, index) => grid.innerHTML += createCardHTML(game, true, index));
-        }
-
-        function createCardHTML(game, isCustom, index) {
-            return `
-                <div class="game-card">
-                    ${isCustom ? `<button class="delete-btn" onclick="deleteGame(${index})">×</button>` : ''}
-                    <div class="thumb" style="background-image: url('${game.img}')"></div>
-                    <div class="info">
-                        <h3>${game.title}</h3>
-                        <a href="${game.url}" class="btn-launch">Играть</a>
-                    </div>
-                </div>`;
-        }
-
-        window.onload = () => {
-            applyTheme();
-            renderGames();
-        };
-    </script>
+Максим, [16.02.2026 22:27]
+init(){for(let i=0;i<4;i++)this.items.push({level:1});this.render();setInterval(()=>this.tick(),1000);setInterval(()=>this.autoMergeFunc(),2000);}
+tick(){let income=0;this.items.forEach(item=>income+=Math.pow(2,item.level-1));this.coins+=income*this.incomeMult;this.updateUI();}
+getColor(lvl){if(lvl>=100)return'linear-gradient(45deg,gold,red,blue)';if(lvl>=90)return'linear-gradient(45deg,purple,pink,blue)';if(lvl>=50)return'linear-gradient(45deg,red,orange,yellow)';return this.colors[(lvl-1)%10];}
+getEmoji(lvl){if(lvl>=100)return'👑';if(lvl>=90)return'💎';if(lvl>=50)return'🔥';return this.emojis[(lvl-1)%10];}
+format(n){if(n>=1e100)return'∞';if(n>=1e15)return(n/1e15).toFixed(1)+'P';if(n>=1e12)return(n/1e12).toFixed(1)+'T';if(n>=1e9)return(n/1e9).toFixed(1)+'B';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return Math.floor(n);}
+spawnItem(){if(this.items.length>=this.slots||this.coins<10)return;this.coins-=10;let lvl=1;if(Math.random()>0.9&&this.maxLevel>5)lvl=Math.floor(this.maxLevel/2);else if(Math.random()>0.7&&this.maxLevel>3)lvl=2;this.items.push({level:lvl});this.render();}
+select(idx){if(this.selected===null){this.selected=idx;}else if(this.selected===idx){this.selected=null;}else{this.merge(this.selected,idx);this.selected=null;}this.render();}
+merge(i1,i2){if(this.items[i1].level===this.items[i2].level){const newLvl=this.items[i1].level+1;this.exp+=newLvl*10;this.coins+=Math.pow(2,newLvl);if(newLvl>this.maxLevel)this.maxLevel=newLvl;const newItems=this.items.filter((_,i)=>i!==i1&&i!==i2);newItems.push({level:newLvl});this.items=newItems;if(newLvl>=100)this.victory();}}
+autoMergeFunc(){if(!this.autoMerge)return;const levels={};this.items.forEach((item,idx)=>{if(!levels[item.level])levels[item.level]=[];levels[item.level].push(idx);});for(let lvl in levels){if(levels[lvl].length>=2){this.merge(levels[lvl][0],levels[lvl][1]);this.render();break;}}}
+buySlot(){if(this.coins<this.prices.slot)return;this.coins-=this.prices.slot;this.slots++;this.prices.slot=Math.floor(this.prices.slot*1.5);this.render();}
+boostIncome(){if(this.coins<this.prices.boost)return;this.coins-=this.prices.boost;this.incomeMult*=2;this.prices.boost*=3;this.render();}
+buyLevel(){if(this.coins<this.prices.levelCost)return;this.coins-=this.prices.levelCost;this.items.push({level:this.prices.level});this.prices.level+=5;this.prices.levelCost*=5;this.render();}
+buyAutoMerge(){if(this.autoMerge||this.coins<this.prices.auto)return;this.coins-=this.prices.auto;this.autoMerge=true;document.getElementById('autoBtn').textContent='✅ Авто активно';document.getElementById('autoBtn').disabled=true;}
+victory(){document.getElementById('finalScore').textContent=this.format(this.coins);document.getElementById('victory').classList.add('active');}
+updateUI(){document.getElementById('coins').textContent=this.format(this.coins);document.getElementById('exp').textContent=this.format(this.exp);document.getElementById('maxLevel').textContent=this.maxLevel;let income=0;this.items.forEach(item=>income+=Math.pow(2,item.level-1));document.getElementById('income').textContent=this.format(income*this.incomeMult);document.getElementById('slotPrice').textContent=this.format(this.prices.slot)+'💰';document.getElementById('boostPrice').textContent=this.format(this.prices.boost)+'💰';document.getElementById('levelPrice').textContent=this.format(this.prices.levelCost)+'💰';}
+render(){this.updateUI();const area=document.getElementById('gameArea');area.innerHTML='';this.items.forEach((item,idx)=>{const div=document.createElement('div');div.className='item'+(idx===this.selected?' selected':'');div.style.background=this.getColor(item.level);div.innerHTML='<div style="font-size:2em">'+this.getEmoji(item.level)+'</div><div>'+item.level+'</div>';div.onclick=()=>this.select(idx);area.appendChild(div);});for(let i=this.items.length;i<this.slots;i++){const div=document.createElement('div');div.className='item empty';div.innerHTML='<div style="opacity:0.3">+</div>';area.appendChild(div);}}
+}
+const game=new Game();
+</script>
 </body>
 </html>
